@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "441680993583",
+    "firebase_url": "https://pailah-c4473.firebaseio.com",
+    "project_id": "pailah-c4473",
+    "storage_bucket": "pailah-c4473.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441680993583:android:71b7d398e8a1b23a",
+        "android_client_info": {
+          "package_name": "com.egifcb.paila.pailah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441680993583-apgkdrj53o0fibq8lhdhlqcljnakct6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.egifcb.paila.pailah",
+            "certificate_hash": "639ab1ea29aa2975f8602aaa1ae49d657b564ec2"
+          }
+        },
+        {
+          "client_id": "441680993583-d6tjob3cp0pkdk4epoh66dn7tue0co1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL2kLqhYUJeHpiL17E7nzJfEhSXMW2MM0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441680993583-d6tjob3cp0pkdk4epoh66dn7tue0co1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

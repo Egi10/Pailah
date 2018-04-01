@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Pailah</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="sumatera_barat">Sumatera Barat</string>
+    <string name="pailah">Pailah</string>
+    <string name="about">About</string>
+    <string name="text_info">Paila is a tourist information app where the coding is open to the public</string>
+    <string name="kodeInfo">000.0.0.00.01</string>
+    <string name="version">Version</string>
+    <string name="titleApp">Pailah for Android</string>
+    <string name="open_source">Open Source</string>
+    <string name="infoGithub">Colleagues can take the project by pressing github logic above, and please take.</string>
+    <string name="infoGithub2">Hopefully useful for everything.</string>
+</resources>
