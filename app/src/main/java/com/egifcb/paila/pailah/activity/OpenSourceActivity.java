@@ -1,6 +1,7 @@
 package com.egifcb.paila.pailah.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -12,7 +13,8 @@ import com.egifcb.paila.pailah.R;
 
 public class OpenSourceActivity extends AppCompatActivity {
     Toolbar toolbar;
-    AppCompatImageView toolbarBack;
+    AppCompatImageView toolbarBack, ivGithub;
+    String url = "https://github.com/Egi10/Pailah";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,16 @@ public class OpenSourceActivity extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        ivGithub = (AppCompatImageView) findViewById(R.id.ivGithub);
+        ivGithub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
             }
         });
     }

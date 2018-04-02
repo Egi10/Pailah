@@ -16,4 +16,5 @@
     <string name="open_source">Open Source</string>
     <string name="infoGithub">Colleagues can take the project by pressing github logic above, and please take.</string>
     <string name="infoGithub2">Hopefully useful for everything.</string>
+    <string name="login">Login</string>
 </resources>

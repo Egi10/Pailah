@@ -1,20 +1,36 @@
 package com.egifcb.paila.pailah.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.egifcb.paila.pailah.R;
+import com.egifcb.paila.pailah.session.SessionManager;
+import com.google.android.gms.common.SignInButton;
+
+import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    SessionManager sessionManager;
+    TextView email, name;
+    CircleImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +40,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         setTitle("Lah Tibo Sanak");
 
+        sessionManager = new SessionManager(getBaseContext());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -32,6 +50,30 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        email = (TextView)header.findViewById(R.id.tvemail);
+        name = (TextView)header.findViewById(R.id.tvName);
+        imageView = (CircleImageView) header.findViewById(R.id.imageView);
+
+        MenuItem nav_login;
+        Menu menu;
+        menu = navigationView.getMenu();
+        nav_login = menu.findItem(R.id.nav_signIn);
+
+        if(sessionManager.isLoggedIn() == true){
+            nav_login.setTitle("Logout");
+            HashMap<String, String> user = sessionManager.getUserDetail();
+            String nm = user.get(SessionManager.NAMA);
+            String em = user.get(SessionManager.EMAIL);
+            String ph = user.get(SessionManager.PHOTO);
+
+            name.setText(nm);
+            email.setText(em);
+            Glide.with(this).load(ph).into(imageView);
+        }else if (sessionManager.isLoggedIn() == false){
+            nav_login.setTitle("Sign In Google");
+        }
     }
 
     @Override
@@ -72,11 +114,39 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_signIn) {
+            if (item.getTitle().equals("Logout")){
+                sessionManager.logoutUser();
+            }else if(item.getTitle().equals("Sign In Google")){
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else if (id == R.id.nav_save) {
+            if(sessionManager.isLoggedIn() == true){
+                Intent intent = new Intent(getBaseContext(), SaveActivity.class);
+                startActivity(intent);
+                finish();
+            }else if (sessionManager.isLoggedIn() == false){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Untuk Mengakses Menu Tambah Wisata Saudara Harus Telebih Dahulu Login. Apa Saudara Ingin Login ?");
+                builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                builder.show();
+            }
         } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
