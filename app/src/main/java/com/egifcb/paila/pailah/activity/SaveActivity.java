@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 
 import com.egifcb.paila.pailah.R;
 import com.egifcb.paila.pailah.model.Constants;
-import com.egifcb.paila.pailah.model.Tour;
+import com.egifcb.paila.pailah.model.Mount;
 import com.egifcb.paila.pailah.session.SessionManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +40,7 @@ public class SaveActivity extends AppCompatActivity {
     Toolbar toolbar;
     AppCompatImageView toolbarBack;
     AppCompatImageView ivImage;
-    AppCompatEditText judul, detail, fasilitas, lat, lag;
+    AppCompatEditText NamaGunung, TipeGunung, Detail, Ketinggian, LetusanTerakhir, Provinsi;
     FancyButton save;
 
     private static final int PICK_IMAGE_REQUEST = 234;
@@ -78,11 +77,12 @@ public class SaveActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getBaseContext());
 
         ivImage = findViewById(R.id.ivImage);
-        judul = findViewById(R.id.tvTitle);
-        detail = findViewById(R.id.tvDetail);
-        fasilitas = findViewById(R.id.tvFasilitas);
-        lat = findViewById(R.id.tvLat);
-        lag = findViewById(R.id.tvLog);
+        NamaGunung = findViewById(R.id.tvnamaGunung);
+        TipeGunung = findViewById(R.id.tvtipeGunung);
+        Detail = findViewById(R.id.tvDetail);
+        Ketinggian = findViewById(R.id.tvketinggian);
+        LetusanTerakhir = findViewById(R.id.tvletusanTerakhir);
+        Provinsi = findViewById(R.id.tvprovinsi);
         save = findViewById(R.id.btnSave);
 
         ivImage.setOnClickListener(new View.OnClickListener() {
@@ -95,20 +95,23 @@ public class SaveActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tvjudul = judul.getText().toString();
-                String tvdetail = detail.getText().toString();
-                String tvfasilitas = fasilitas.getText().toString();
-                String tvlat = lat.getText().toString();
-                String tvlag = lag.getText().toString();
+                String namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi;
+
+                namaGunung = NamaGunung.getText().toString();
+                tipeGunung = TipeGunung.getText().toString();
+                detail = Detail.getText().toString();
+                ketinggian = Ketinggian.getText().toString();
+                letusanTerakhir = LetusanTerakhir.getText().toString();
+                provinsi = Provinsi.getText().toString();
 
                 HashMap<String, String> user = sessionManager.getUserDetail();
                 String nm = user.get(SessionManager.NAMA);
                 String em = user.get(SessionManager.EMAIL);
 
-                if (tvjudul.equals("") || tvdetail.equals("") || tvfasilitas.equals("") || tvlat.equals("") || tvlag.equals("")){
+                if (namaGunung.equals("") || tipeGunung.equals("") || detail.equals("") || ketinggian.equals("") || letusanTerakhir.equals("") || provinsi.equals("")){
                     Toast.makeText(getBaseContext(), "Jangan Ada Data Yang Kosong", Toast.LENGTH_SHORT).show();
                 }else {
-                    uploadFile(tvjudul, tvdetail, tvfasilitas, tvlat, tvlag, nm, em);
+                    uploadFile(namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi, nm);
                 }
             }
         });
@@ -121,8 +124,7 @@ public class SaveActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    private void uploadFile(final String tvjudul, final String tvdetail, final String tvfasilitas, final String tvlat, final String tvlag,
-                            final String nama, final String email){
+    private void uploadFile(final String namaGunung, final String tipeGunung, final String detail, final String ketinggian, final String letusanTerakhir, final String provinsi, final String publish){
         if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Mohon Menunggu");
@@ -136,20 +138,21 @@ public class SaveActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            databaseReference = FirebaseDatabase.getInstance().getReference("tourall");
+                            databaseReference = FirebaseDatabase.getInstance().getReference("mount");
 
                             String id = databaseReference.push().getKey();
 
-                            Tour tour = new Tour(id, tvjudul, tvdetail, tvfasilitas, tvlat, tvlag, taskSnapshot.getDownloadUrl().toString(), nama, email);
-                            databaseReference.child(id).setValue(tour);
+                            Mount mount = new Mount(id, namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi, taskSnapshot.getDownloadUrl().toString(), publish);
+                            databaseReference.child(id).setValue(mount);
 
                             Toast.makeText(getBaseContext(), "Data Sudah Tersimpan", Toast.LENGTH_SHORT).show();
 
-                            judul.setText("");
-                            detail.setText("");
-                            fasilitas.setText("");
-                            lat.setText("");
-                            lag.setText("");
+                            NamaGunung.setText("");
+                            TipeGunung.setText("");
+                            Detail.setText("");
+                            Ketinggian.setText("");
+                            LetusanTerakhir.setText("");
+                            Provinsi.setText("");
                             ivImage.setImageResource(R.drawable.ic_upload);
 
                             progressDialog.dismiss();

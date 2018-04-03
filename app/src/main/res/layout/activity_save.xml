@@ -59,8 +59,19 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Judul"
-                    android:id="@+id/tvTitle"/>
+                    android:hint="Nama Gunung"
+                    android:id="@+id/tvnamaGunung"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tipe Gunung"
+                    android:id="@+id/tvtipeGunung"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -81,8 +92,8 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Fasilitas"
-                    android:id="@+id/tvFasilitas"/>
+                    android:hint="Ketinggian"
+                    android:id="@+id/tvketinggian"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -92,8 +103,8 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Lat"
-                    android:id="@+id/tvLat"/>
+                    android:hint="Letusan Terakhir"
+                    android:id="@+id/tvletusanTerakhir"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -104,8 +115,8 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Log"
-                    android:id="@+id/tvLog"/>
+                    android:hint="Provinsi"
+                    android:id="@+id/tvprovinsi"/>
             </android.support.design.widget.TextInputLayout>
 
             <mehdi.sakout.fancybuttons.FancyButton

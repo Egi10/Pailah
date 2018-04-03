@@ -6,22 +6,31 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.egifcb.paila.pailah.R;
+import com.egifcb.paila.pailah.adapter.AdapterView;
+import com.egifcb.paila.pailah.model.Mount;
 import com.egifcb.paila.pailah.session.SessionManager;
-import com.google.android.gms.common.SignInButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -31,6 +40,13 @@ public class MainActivity extends AppCompatActivity
     SessionManager sessionManager;
     TextView email, name;
     CircleImageView imageView;
+
+    DatabaseReference databaseReference;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    ArrayList<Mount> daftar;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +90,51 @@ public class MainActivity extends AppCompatActivity
         }else if (sessionManager.isLoggedIn() == false){
             nav_login.setTitle("Sign In Google");
         }
+
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
+        recyclerView = (RecyclerView)findViewById(R.id.rv_view);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getApplicationContext(), 1);
+        recyclerView.setLayoutManager(layoutManager);
+
+        loadview();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+
+                loadview();
+            }
+        });
+    }
+
+    public void loadview(){
+        swipeRefreshLayout.setRefreshing(true);
+        //View Firebase
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("mount").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                daftar = new ArrayList<>();
+                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()){
+                    Mount mount = noteDataSnapshot.getValue(Mount.class);
+                    mount.setKey(noteDataSnapshot.getKey());
+
+                    daftar.add(mount);
+                }
+
+                adapter = new AdapterView(getApplicationContext(), daftar);
+                recyclerView.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Database Error"+databaseError, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
