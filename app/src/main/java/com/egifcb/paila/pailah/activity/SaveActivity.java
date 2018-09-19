@@ -142,7 +142,7 @@ public class SaveActivity extends AppCompatActivity {
 
                             String id = databaseReference.push().getKey();
 
-                            Mount mount = new Mount(id, namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi, taskSnapshot.getDownloadUrl().toString(), publish);
+                            Mount mount = new Mount(id, namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi, taskSnapshot.getStorage().toString(), publish);
                             databaseReference.child(id).setValue(mount);
 
                             Toast.makeText(getBaseContext(), "Data Sudah Tersimpan", Toast.LENGTH_SHORT).show();

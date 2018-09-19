@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -208,9 +209,15 @@ public class MainActivity extends AppCompatActivity
                 builder.show();
             }
         } else if (id == R.id.nav_gallery) {
-
+            Intent intent = new Intent(getBaseContext(), GaleryActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_otherResaurces) {
+            Intent intent = new Intent(getBaseContext(), OtherResaurcesActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_openSource) {
             Intent intent = new Intent(getBaseContext(), OpenSourceActivity.class);
             startActivity(intent);
@@ -224,5 +231,29 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            AlertDialog.Builder alBuilder = new AlertDialog.Builder(MainActivity.this);
+            alBuilder.setMessage("Are you really to close this app");
+            alBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent keluar = new Intent(Intent.ACTION_MAIN);
+                    keluar.addCategory(Intent.CATEGORY_HOME);
+                    keluar.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(keluar);
+                }
+            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alBuilder.show();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

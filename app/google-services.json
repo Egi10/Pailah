@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "441680993583-apgkdrj53o0fibq8lhdhlqcljnakct6q.apps.googleusercontent.com",
+          "client_id": "441680993583-vjjokckfjkeuad9s9qcnhph1m253umg1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.egifcb.paila.pailah",
-            "certificate_hash": "639ab1ea29aa2975f8602aaa1ae49d657b564ec2"
+            "certificate_hash": "f78275d0621633072118bb19c0aad27710db06b3"
           }
         },
         {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "441680993583-d6tjob3cp0pkdk4epoh66dn7tue0co1o.apps.googleusercontent.com",
+              "client_id": "441680993583-64q6rlpi2ph03k1ioudtoc7mqido5vpv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

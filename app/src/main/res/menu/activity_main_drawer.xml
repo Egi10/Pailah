@@ -19,11 +19,19 @@
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Favorite" />
+        <item
+            android:id="@+id/nav_uploadMe"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Upload Me" />
     </group>
 
     <item android:title="About">
         <menu>
+            <item
+                android:id="@+id/nav_otherResaurces"
+                android:icon="@drawable/ic_resaurces"
+                android:title="Other Resources" />
             <item
                 android:id="@+id/nav_openSource"
                 android:icon="@drawable/ic_opensource"

@@ -9,7 +9,7 @@
     <string name="sumatera_barat">Sumatera Barat</string>
     <string name="pailah">Pailah</string>
     <string name="about">About</string>
-    <string name="text_info">Paila is a tourist information app where the coding is open to the public</string>
+    <string name="text_info">An Application Information Mountain In West Sumatra Which App Is Used To Learn Android</string>
     <string name="kodeInfo">000.0.0.00.01</string>
     <string name="version">Version</string>
     <string name="titleApp">Pailah for Android</string>
@@ -17,4 +17,6 @@
     <string name="infoGithub">Colleagues can take the project by pressing github logic above, and please take.</string>
     <string name="infoGithub2">Hopefully useful for everything.</string>
     <string name="login">Login</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="galery">Galery</string>
 </resources>

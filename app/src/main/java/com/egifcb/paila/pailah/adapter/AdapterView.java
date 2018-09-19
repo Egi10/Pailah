@@ -1,6 +1,7 @@
 package com.egifcb.paila.pailah.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.egifcb.paila.pailah.R;
+import com.egifcb.paila.pailah.activity.DetailActivity;
+import com.egifcb.paila.pailah.model.Constants;
 import com.egifcb.paila.pailah.model.Mount;
 
 import java.util.ArrayList;
@@ -40,13 +43,60 @@ public class AdapterView extends RecyclerView.Adapter<AdapterView.RecyclerViewHo
         final Mount mount = daftar.get(position);
         String fontName;
         fontName = "fonts/SourceSerifPro-Regular.ttf";
+        final String key;
+        final String namaGunung;
+        final String tipeGunung;
+        final String detail;
+        final String ketinggian;
+        final String letusanTerakhir;
+        final String provinsi;
+        final String photo;
+        final String publish;
 
-        holder.namagunung.setText(mount.getNamaGunung());
+        key = mount.getKey();
+        namaGunung = mount.getNamaGunung();
+        tipeGunung = mount.getTipeGunung();
+        detail = mount.getDetail();
+        ketinggian = mount.getKetinggian();
+        letusanTerakhir = mount.getLetusanTerakhir();
+        provinsi = mount.getProvinsi();
+        photo = mount.getPhoto();
+        publish = mount.getPublish();
+
+        holder.namagunung.setText(namaGunung);
         holder.namagunung.setTypeface(Typeface.createFromAsset(context.getAssets(), fontName));
-        holder.tipegunung.setText(mount.getTipeGunung());
-        holder.ketinggian.setText(mount.getKetinggian());
-        holder.detail.setText(mount.getDetail());
-        Glide.with(context).load(mount.getPhoto()).into(holder.imageView);
+        holder.tipegunung.setText(tipeGunung);
+        holder.ketinggian.setText(ketinggian);
+        holder.detail.setText(detail);
+        Glide.with(context).load(photo).into(holder.imageView);
+
+        holder.share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, namaGunung+"\nDownload Segera Aplikasinya Hanya Di Playstore : https://play.google.com/store/apps/details?id=com.egifcb.paila.pailah");
+                v.getContext().startActivity(Intent.createChooser(shareIntent, "Share link using"));
+            }
+        });
+
+        holder.explore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(Constants.KEY, key);
+                intent.putExtra(Constants.NAMA_GUNUNG, namaGunung);
+                intent.putExtra(Constants.TIPE_GUNUNG, tipeGunung);
+                intent.putExtra(Constants.DETAIL, detail);
+                intent.putExtra(Constants.KETINGGIAN, ketinggian);
+                intent.putExtra(Constants.LETUSAN_TERAKHIR, letusanTerakhir);
+                intent.putExtra(Constants.PROVINSI, provinsi);
+                intent.putExtra(Constants.PHOTO, photo);
+                intent.putExtra(Constants.PUBLISH, publish);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
 
