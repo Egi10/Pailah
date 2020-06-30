@@ -3,16 +3,22 @@ package com.egifcb.paila.pailah.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     ArrayList<Mount> daftar;
     SwipeRefreshLayout swipeRefreshLayout;
+    GoogleSignInClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,13 @@ public class MainActivity extends AppCompatActivity
         setTitle("Lah Tibo Sanak");
 
         sessionManager = new SessionManager(getBaseContext());
+
+        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(MainActivity.this.getResources().getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleApiClient = GoogleSignIn.getClient(this, options);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         menu = navigationView.getMenu();
         nav_login = menu.findItem(R.id.nav_signIn);
 
-        if(sessionManager.isLoggedIn() == true){
+        if(sessionManager.isLoggedIn()){
             nav_login.setTitle("Logout");
             HashMap<String, String> user = sessionManager.getUserDetail();
             String nm = user.get(SessionManager.NAMA);
@@ -88,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             name.setText(nm);
             email.setText(em);
             Glide.with(this).load(ph).into(imageView);
-        }else if (sessionManager.isLoggedIn() == false){
+        }else if (!sessionManager.isLoggedIn()){
             nav_login.setTitle("Sign In Google");
         }
 
@@ -117,11 +131,13 @@ public class MainActivity extends AppCompatActivity
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("mount").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 daftar = new ArrayList<>();
                 for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()){
                     Mount mount = noteDataSnapshot.getValue(Mount.class);
-                    mount.setKey(noteDataSnapshot.getKey());
+                    if (mount != null) {
+                        mount.setKey(noteDataSnapshot.getKey());
+                    }
 
                     daftar.add(mount);
                 }
@@ -132,7 +148,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(), "Database Error"+databaseError, Toast.LENGTH_SHORT).show();
             }
         });
@@ -178,6 +194,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_signIn) {
             if (item.getTitle().equals("Logout")){
+                googleApiClient.signOut();
                 sessionManager.logoutUser();
             }else if(item.getTitle().equals("Sign In Google")){
                 Intent intent = new Intent(getBaseContext(), LoginActivity.class);
@@ -185,11 +202,11 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
         } else if (id == R.id.nav_save) {
-            if(sessionManager.isLoggedIn() == true){
+            if(sessionManager.isLoggedIn()){
                 Intent intent = new Intent(getBaseContext(), SaveActivity.class);
                 startActivity(intent);
                 finish();
-            }else if (sessionManager.isLoggedIn() == false){
+            }else if (!sessionManager.isLoggedIn()){
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setMessage("Untuk Mengakses Menu Tambah Wisata Saudara Harus Telebih Dahulu Login. Apa Saudara Ingin Login ?");
                 builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {

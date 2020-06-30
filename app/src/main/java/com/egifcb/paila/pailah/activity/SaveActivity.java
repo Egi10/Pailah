@@ -7,13 +7,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -157,7 +157,8 @@ public class SaveActivity extends AppCompatActivity {
                             String id = databaseReference.push().getKey();
 
                             Uri uriDownload = task.getResult();
-                            Mount mount = new Mount(id, namaGunung, tipeGunung, detail, ketinggian, letusanTerakhir, provinsi, uriDownload.toString(), publish);
+                            Mount mount = new Mount(id, namaGunung, tipeGunung, detail, ketinggian,
+                                    letusanTerakhir, provinsi, uriDownload.toString(), publish);
                             assert id != null;
                             databaseReference.child(id).setValue(mount);
 

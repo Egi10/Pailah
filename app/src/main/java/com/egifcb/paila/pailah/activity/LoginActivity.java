@@ -3,25 +3,25 @@ package com.egifcb.paila.pailah.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
+
 import com.egifcb.paila.pailah.R;
 import com.egifcb.paila.pailah.session.SessionManager;
-import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -30,16 +30,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity  {
     Toolbar toolbar;
     AppCompatImageView toolbarBack;
     SignInButton signIn;
-    GoogleApiClient googleApiClient;
+    GoogleSignInClient googleApiClient;
     FirebaseAuth firebaseAuth;
     private static final int RC_SIGN_IN = 9001;
     Uri photoUri;
     String name, email, photo, id;
     SessionManager sessionManager;
+    private String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +81,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .requestEmail()
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder(getBaseContext())
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, options)
-                .build();
+        googleApiClient = GoogleSignIn.getClient(this, options);
     }
 
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        Intent signInIntent = googleApiClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -96,27 +94,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (googleSignInResult.isSuccess()){
-                GoogleSignInAccount signInAccount = googleSignInResult.getSignInAccount();
-
-                name = signInAccount.getDisplayName();
-                email = signInAccount.getEmail();
-                photoUri = signInAccount.getPhotoUrl();
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                name = account.getDisplayName();
+                email = account.getEmail();
+                photoUri = account.getPhotoUrl();
                 photo = photoUri.toString();
-                id = signInAccount.getId();
+                id = account.getId();
 
                 sessionManager.createLoginSession(id, name, email, photo);
 
-                firebaseAuthWithGoogle(signInAccount);
-            }else {
-                Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT).show();
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("Error ", "firebaseAuthWithGoogle:" + acct.getId());
+    private void firebaseAuthWithGoogle(String idToken) {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Attention");
@@ -125,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         progressDialog.setMax(100);
         progressDialog.show();
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -153,15 +152,5 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 }

@@ -1,19 +1,18 @@
 package com.egifcb.paila.pailah.activity;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.egifcb.paila.pailah.R;
-import com.egifcb.paila.pailah.adapter.AdapterView;
 import com.egifcb.paila.pailah.adapter.AdapterViewGalery;
 import com.egifcb.paila.pailah.model.Mount;
 import com.google.firebase.database.DataSnapshot;

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Pailah.iml" filepath="$PROJECT_DIR$/Pailah.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Pailah-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Pailah-app.iml" group="Pailah/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Projects Github-Pailah.iml" filepath="$PROJECT_DIR$/.idea/modules/Projects Github-Pailah.iml" group="Pailah" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
